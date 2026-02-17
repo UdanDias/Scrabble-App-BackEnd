@@ -1,5 +1,6 @@
 package lk.kelaniya.uok.scrabble.scrabbleapp.service.impl;
 
+import jakarta.transaction.Transactional;
 import lk.kelaniya.uok.scrabble.scrabbleapp.dto.GameDTO;
 import lk.kelaniya.uok.scrabble.scrabbleapp.service.GameService;
 import lk.kelaniya.uok.scrabble.scrabbleapp.util.UtilData;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 
 
 public class GameServiceImpl implements GameService {
