@@ -4,14 +4,14 @@ import lk.kelaniya.uok.scrabble.scrabbleapp.dto.GameDTO;
 import lk.kelaniya.uok.scrabble.scrabbleapp.service.GameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
 
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+
 
 public class GameServiceImpl implements GameService {
     @Override

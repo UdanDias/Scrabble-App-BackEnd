@@ -2,15 +2,20 @@ package lk.kelaniya.uok.scrabble.scrabbleapp.service.impl;
 
 import lk.kelaniya.uok.scrabble.scrabbleapp.dto.PlayerDTO;
 import lk.kelaniya.uok.scrabble.scrabbleapp.service.PlayerService;
+import lk.kelaniya.uok.scrabble.scrabbleapp.util.UtilData;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
+import java.util.UUID;
 
 @Service
-@Transactional
+
 public class PlayerServiceImpl implements PlayerService {
     @Override
     public void addPlayer(PlayerDTO playerDTO) {
+        playerDTO.setPlayerId(UtilData.generatePlayerId());
+        playerDTO.setAge(UtilData.calcAge(playerDTO.getDob()));
 
     }
 
