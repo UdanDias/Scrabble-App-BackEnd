@@ -32,60 +32,63 @@ public class PlayerController {
     }
     @GetMapping("/getselectedplayer")
     public ResponseEntity<PlayerDTO> getSelectedPlayer(@RequestParam ("playerId")String playerId){
-        return ResponseEntity.ok(new PlayerDTO("P001",
-                "Udan",
-                "Dias",
-                22,
-                "Male",
-                LocalDate.of(2003, 5, 14),
-                "udan.dias@example.com",
-                "0771234567",
-                "Kelaniya, Sri Lanka",
-                "Faculty of Computing and Technology",
-                "Undergraduate",
-                LocalDate.of(2024, 1, 10),
-                15.0f,
-                320,
-                21.3f,
-                5));
+        return ResponseEntity.ok(new PlayerDTO("P001",                     // playerId
+                "Udan",                      // firstName
+                "Dias",                      // lastName
+                17,                          // age
+                "Male",                      // gender
+                LocalDate.of(2009, 5, 10),   // dob
+                "udan.dias@example.com",      // email
+                "+94771234567",               // phone
+                "123 Main St, Colombo",       // address
+                "Computing",                 // faculty
+                "Undergraduate",             // academicLevel
+                LocalDate.of(2025, 9, 1),    // accountCreatedDate
+                15.5f,                       // totalWins
+                20,                          // totalGamesPlayed
+                75,                          // cumMargin
+                3.75f,                       // avgMargin
+                2   ));
     }
     @GetMapping("/getallplayers")
     public ResponseEntity<List<PlayerDTO>> getAllPlayers(){
         List<PlayerDTO> playerDTOList=new ArrayList<>();
         playerDTOList.add(new PlayerDTO(
-                "P001",
-                "Udan",
-                "Dias",
-                22,
-                "Male",
-                LocalDate.of(2003, 5, 14),
-                "udan.dias@example.com",
-                "0771234567",
-                "Kelaniya, Sri Lanka",
-                "Faculty of Computing and Technology",
-                "Undergraduate",
-                LocalDate.of(2024, 1, 10),
-                15.0f,
-                320,
-                21.3f,
-                5));
+                "P001",                     // playerId
+                "Udan",                      // firstName
+                "Dias",                      // lastName
+                17,                          // age
+                "Male",                      // gender
+                LocalDate.of(2009, 5, 10),   // dob
+                "udan.dias@example.com",      // email
+                "+94771234567",               // phone
+                "123 Main St, Colombo",       // address
+                "Computing",                 // faculty
+                "Undergraduate",             // academicLevel
+                LocalDate.of(2025, 9, 1),    // accountCreatedDate
+                15.5f,                       // totalWins
+                20,                          // totalGamesPlayed
+                75,                          // cumMargin
+                3.75f,                       // avgMargin
+                2   ));
         playerDTOList.add(new PlayerDTO(
-                "P002",
-                "Nadil",
-                "Perera",
-                23,
-                "Male",
-                LocalDate.of(2002, 3, 2),
-                "nadil.perera@example.com",
-                "0779876543",
-                "Colombo",
-                "Faculty of Science",
-                "Undergraduate",
-                LocalDate.of(2023, 11, 5),
-                22.0f,
-                410,
-                18.6f,
-                3));
+                "P002",                     // playerId
+                "Sanjana",                   // firstName
+                "Perera",                    // lastName
+                16,                          // age
+                "Female",                    // gender
+                LocalDate.of(2010, 8, 22),   // dob
+                "sanjana.perera@example.com",// email
+                "+94779876543",              // phone
+                "45 Lake Rd, Kandy",         // address
+                "Engineering",               // faculty
+                "Undergraduate",             // academicLevel
+                LocalDate.of(2025, 6, 15),   // accountCreatedDate
+                12.0f,                       // totalWins
+                18,                          // totalGamesPlayed
+                60,                          // cumMargin
+                3.33f,                       // avgMargin
+                5 ));
         return ResponseEntity.ok(playerDTOList);
     }
 }

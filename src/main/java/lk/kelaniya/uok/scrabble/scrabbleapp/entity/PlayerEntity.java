@@ -36,7 +36,7 @@ public class PlayerEntity {
     private int totalGamesPlayed;
     private int cumMargin;
     private float avgMargin;
-    private int rank;
+    private int playerRank;
 
     @OneToMany(mappedBy = "player1")
     private List<GameEntity> gamesAsPlayer1;

@@ -28,7 +28,7 @@ public class PlayerDTO implements Serializable {
     private int totalGamesPlayed;
     private int cumMargin;
     private float avgMargin;
-    private int rank;
+    private int playerRank;
 
 
 
