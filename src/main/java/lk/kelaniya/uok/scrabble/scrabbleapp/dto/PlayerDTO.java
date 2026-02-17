@@ -5,12 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class PlayerDTO {
+public class PlayerDTO implements Serializable {
     private String playerId;
     private String firstName;
     private String lastName;

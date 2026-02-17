@@ -31,7 +31,7 @@ public class PlayerController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     @GetMapping("/getselectedplayer")
-    public ResponseEntity<PlayerDTO> getPlayer(@RequestParam ("playerId")String playerId){
+    public ResponseEntity<PlayerDTO> getSelectedPlayer(@RequestParam ("playerId")String playerId){
         return ResponseEntity.ok(new PlayerDTO("P001",
                 "Udan",
                 "Dias",

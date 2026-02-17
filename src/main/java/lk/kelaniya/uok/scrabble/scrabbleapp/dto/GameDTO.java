@@ -4,13 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.security.PrivateKey;
 import java.time.LocalDate;
 
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class GameDTO {
+public class GameDTO implements Serializable {
     private String gameId;
     private String player1Id;
     private String player2Id;
