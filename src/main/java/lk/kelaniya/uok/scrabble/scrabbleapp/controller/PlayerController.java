@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/scrabble")
+@RequestMapping("/api/v1/player")
 public class PlayerController {
     @GetMapping
     public String healthCheck(){
