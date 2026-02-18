@@ -11,6 +11,9 @@ public class UtilData {
     public static String generateGameId(){
         return "G/-"+UUID.randomUUID();
     }
+    public static String generatePerformanceId(){
+        return "PERF/-"+UUID.randomUUID();
+    }
 
     public static int calcAge(LocalDate dob){
         if(dob == null){
