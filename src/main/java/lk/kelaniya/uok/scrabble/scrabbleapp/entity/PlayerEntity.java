@@ -1,10 +1,7 @@
 package lk.kelaniya.uok.scrabble.scrabbleapp.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,11 +29,10 @@ public class PlayerEntity {
     private String faculty;
     private String academicLevel;
     private LocalDate accountCreatedDate;
-    private float totalWins;
-    private int totalGamesPlayed;
-    private int cumMargin;
-    private float avgMargin;
-    private int playerRank;
+
+    @OneToOne(mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
+    private PerformanceEntity performance;
+
 
     @OneToMany(mappedBy = "player1")
     private List<GameEntity> gamesAsPlayer1;
