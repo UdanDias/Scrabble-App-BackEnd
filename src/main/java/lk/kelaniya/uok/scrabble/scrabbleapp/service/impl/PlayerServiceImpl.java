@@ -34,6 +34,16 @@ public class PlayerServiceImpl implements PlayerService {
         playerDTO.setAccountCreatedDate(UtilData.generateTodayDate());
 
         PlayerEntity playerEntity=entityDTOConvert.convertPlayerDTOToPlayerEntity(playerDTO);
+        PerformanceEntity performanceEntity=new PerformanceEntity();
+        performanceEntity.setPerformanceId(UtilData.generatePerformanceId());
+        performanceEntity.setPlayer(playerEntity);
+        performanceEntity.setTotalWins(0);
+        performanceEntity.setTotalGamesPlayed(0);
+        performanceEntity.setCumMargin(0);
+        performanceEntity.setAvgMargin(0.0);
+        performanceEntity.setPlayerRank(0);
+
+        playerEntity.setPerformance(performanceEntity);
         playerDao.save(playerEntity);
     }
 

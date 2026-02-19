@@ -30,7 +30,7 @@ public class PlayerEntity {
     private String academicLevel;
     private LocalDate accountCreatedDate;
 
-    @OneToOne(mappedBy = "player")
+    @OneToOne(mappedBy = "player", cascade = CascadeType.ALL , orphanRemoval = true)
     private PerformanceEntity performance;
 
 
