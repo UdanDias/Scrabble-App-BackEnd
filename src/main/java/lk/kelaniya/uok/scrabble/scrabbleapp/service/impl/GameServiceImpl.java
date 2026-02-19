@@ -1,13 +1,18 @@
 package lk.kelaniya.uok.scrabble.scrabbleapp.service.impl;
 
 import jakarta.transaction.Transactional;
+import lk.kelaniya.uok.scrabble.scrabbleapp.dao.GameDao;
 import lk.kelaniya.uok.scrabble.scrabbleapp.dao.PerformanceDao;
+import lk.kelaniya.uok.scrabble.scrabbleapp.dao.PlayerDao;
 import lk.kelaniya.uok.scrabble.scrabbleapp.dto.GameDTO;
 import lk.kelaniya.uok.scrabble.scrabbleapp.dto.PerformanceDTO;
+import lk.kelaniya.uok.scrabble.scrabbleapp.entity.GameEntity;
 import lk.kelaniya.uok.scrabble.scrabbleapp.entity.PerformanceEntity;
+import lk.kelaniya.uok.scrabble.scrabbleapp.entity.PlayerEntity;
 import lk.kelaniya.uok.scrabble.scrabbleapp.exception.InputMarginIncorrectException;
 import lk.kelaniya.uok.scrabble.scrabbleapp.exception.PlayerNotFoundException;
 import lk.kelaniya.uok.scrabble.scrabbleapp.service.GameService;
+import lk.kelaniya.uok.scrabble.scrabbleapp.util.EntityDTOConvert;
 import lk.kelaniya.uok.scrabble.scrabbleapp.util.PerformanceCalc;
 import lk.kelaniya.uok.scrabble.scrabbleapp.util.UtilData;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +31,10 @@ public class GameServiceImpl implements GameService {
 
     private final PerformanceCalc performanceCalc;
     private final PerformanceDao performanceDao;
+    private final GameDao gameDao;
+    private final EntityDTOConvert entityDTOConvert;
+    private final PlayerDao playerDao;
+
     @Override
     public void addGame(GameDTO gameDTO)  {
         gameDTO.setGameId(UtilData.generateGameId());
@@ -33,16 +42,46 @@ public class GameServiceImpl implements GameService {
         gameDTO.setMargin(calcMargin);
         gameDTO.setWinnerId(performanceCalc.calcWinner(gameDTO));
 
-        PerformanceEntity player1Perf=performanceDao.findById(gameDTO.getPlayer1Id())
-                .orElseThrow(()->new PlayerNotFoundException("Player1 not found"));
+        gameDTO.setGameTied(gameDTO.getScore1() == gameDTO.getScore2());
+        if (gameDTO.isGameTied()) {
+            gameDTO.setWinnerId("");
+        }
 
-        PerformanceEntity player2Perf=performanceDao.findById(gameDTO.getPlayer2Id())
+        PlayerEntity player1=playerDao.findById(gameDTO.getPlayer1Id())
+                        .orElseThrow(()->new PlayerNotFoundException("Player1 not found"));
+
+        PlayerEntity player2=playerDao.findById(gameDTO.getPlayer2Id())
                 .orElseThrow(()->new PlayerNotFoundException("Player2 not found"));
+
+        GameEntity gameEntity=entityDTOConvert.convertGameDTOToGameEntity(gameDTO);
+        gameEntity.setPlayer1(player1);
+        gameEntity.setPlayer2(player2);
+
+        if (gameDTO.getWinnerId() != null && !gameDTO.getWinnerId().isEmpty()) {
+            PlayerEntity winner = playerDao.findById(gameDTO.getWinnerId())
+                    .orElseThrow(() -> new PlayerNotFoundException("Winner not found"));
+            gameEntity.setWinner(winner);
+        }
+        gameDao.save(gameEntity);
+        System.out.println("from gameServiceImpl DTO : "+gameDTO);
+//        System.out.println("from gameServiceImpl DTO : "+gameDTO);
+
+
+        PerformanceEntity player1Perf=performanceDao.findById(player1.getPlayerId())
+                .orElseThrow(()->new PlayerNotFoundException("Player1perf not found"));
+
+        PerformanceEntity player2Perf=performanceDao.findById(player2.getPlayerId())
+                .orElseThrow(()->new PlayerNotFoundException("Player2perf not found"));
+        System.out.println("from playerServiceImpl EntityPerf1 : "+player1Perf);
+        System.out.println("from playerServiceImpl EntityPerf2 : "+player2Perf);
+
+
+
 
         if (!gameDTO.isGameTied()){
 //            PerformanceEntity winner=performanceDao.findById(gameDTO.getWinnerId())
 //                    .orElseThrow(()->new PlayerNotFoundException("Player not found"));
-            if(gameDTO.getWinnerId().equals(gameDTO.getPlayer1Id())){
+            if(gameDTO.getWinnerId().equals(player1.getPlayerId())){
                 performanceCalc.updatePerformanceAfterGame(player1Perf,gameDTO);
                 player2Perf.setTotalGamesPlayed(player2Perf.getTotalGamesPlayed()+1);
 
@@ -55,6 +94,7 @@ public class GameServiceImpl implements GameService {
             performanceCalc.updatePerformanceAfterGame(player1Perf,gameDTO);
             performanceCalc.updatePerformanceAfterGame(player2Perf,gameDTO);
         }
+
 
 
     }

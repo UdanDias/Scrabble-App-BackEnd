@@ -26,6 +26,7 @@ import java.util.UUID;
 public class PlayerServiceImpl implements PlayerService {
 
     private final PlayerDao playerDao;
+    private final PerformanceDao performanceDao;
     private final EntityDTOConvert entityDTOConvert;
     @Override
     public void addPlayer(PlayerDTO playerDTO) {
@@ -34,8 +35,10 @@ public class PlayerServiceImpl implements PlayerService {
         playerDTO.setAccountCreatedDate(UtilData.generateTodayDate());
 
         PlayerEntity playerEntity=entityDTOConvert.convertPlayerDTOToPlayerEntity(playerDTO);
+
         PerformanceEntity performanceEntity=new PerformanceEntity();
-        performanceEntity.setPerformanceId(UtilData.generatePerformanceId());
+
+//        performanceEntity.setPlayerId(playerEntity.getPlayerId());
         performanceEntity.setPlayer(playerEntity);
         performanceEntity.setTotalWins(0);
         performanceEntity.setTotalGamesPlayed(0);
@@ -44,7 +47,11 @@ public class PlayerServiceImpl implements PlayerService {
         performanceEntity.setPlayerRank(0);
 
         playerEntity.setPerformance(performanceEntity);
+        System.out.println("from playerServiceImpl DTO :  "+playerDTO);
+        System.out.println("from playerServiceImpl Entity :  "+playerEntity);
+        System.out.println("from playerServiceImpl PerfEntity :  "+performanceEntity);
         playerDao.save(playerEntity);
+
     }
 
     @Override

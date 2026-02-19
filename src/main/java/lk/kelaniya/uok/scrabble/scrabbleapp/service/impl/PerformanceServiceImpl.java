@@ -13,10 +13,10 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 public class PerformanceServiceImpl implements PerformanceService {
-    @Override
-    public void addPerformance(PerformanceDTO performanceDTO) {
-        performanceDTO.setPerformanceId(UtilData.generatePerformanceId());
-    }
+//    @Override
+//    public void addPerformance(PerformanceDTO performanceDTO) {
+//        performanceDTO.setPerformanceId(UtilData.generatePerformanceId());
+//    }
 
     @Override
     public void deletePerformance(String performanceId) {

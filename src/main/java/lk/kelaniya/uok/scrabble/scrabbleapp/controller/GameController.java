@@ -28,7 +28,7 @@ public class GameController {
         }
         try {
             gameService.addGame(gameDTO);
-            System.out.println(gameDTO);
+            System.out.println("from game controller DTO : "+gameDTO);
             return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (GameNotFoundException e) {
             e.printStackTrace();

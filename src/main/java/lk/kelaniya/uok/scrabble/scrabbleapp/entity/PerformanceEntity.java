@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,10 +14,12 @@ import lombok.NoArgsConstructor;
 public class PerformanceEntity {
 
     @Id
-    private String performanceId;
+    private String playerId;
 
     @OneToOne(optional = false)
+    @MapsId
     @JoinColumn(name = "player_id",nullable = false, unique = true)
+    @ToString.Exclude
     private PlayerEntity player;
 
     private double totalWins;

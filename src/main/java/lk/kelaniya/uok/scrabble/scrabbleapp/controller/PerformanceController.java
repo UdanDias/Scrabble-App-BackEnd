@@ -30,7 +30,7 @@ public class PerformanceController {
         }
         try {
             System.out.println(performanceDTO);
-            performanceService.addPerformance(performanceDTO);
+//            performanceService.addPerformance(performanceDTO);
             return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (PerformanceNotFoundException e){
             e.printStackTrace();
