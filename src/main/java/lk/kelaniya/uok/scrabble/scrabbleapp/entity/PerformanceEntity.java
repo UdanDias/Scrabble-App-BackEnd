@@ -22,9 +22,9 @@ public class PerformanceEntity {
     @ToString.Exclude
     private PlayerEntity player;
 
-    private double totalWins;
-    private int totalGamesPlayed;
-    private int cumMargin;
-    private double avgMargin;
-    private int playerRank;
+    private Double totalWins;
+    private Integer totalGamesPlayed;
+    private Integer cumMargin;
+    private Double avgMargin;
+    private Integer playerRank;
 }

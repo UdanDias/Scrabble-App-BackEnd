@@ -44,7 +44,7 @@ public class PlayerServiceImpl implements PlayerService {
 
 //        performanceEntity.setPlayerId(playerEntity.getPlayerId());
         performanceEntity.setPlayer(playerEntity);
-        performanceEntity.setTotalWins(0);
+        performanceEntity.setTotalWins(0.0);
         performanceEntity.setTotalGamesPlayed(0);
         performanceEntity.setCumMargin(0);
         performanceEntity.setAvgMargin(0.0);
@@ -65,12 +65,21 @@ public class PlayerServiceImpl implements PlayerService {
 //    }
 @Override
 public void deletePlayer(String playerId) {
-    PlayerEntity player = playerDao.findById(playerId)
+    PlayerEntity playerEntity = playerDao.findById(playerId)
             .orElseThrow(() -> new PlayerNotFoundException("Player not found"));
 
-    player.setDeleted(true);
-    player.setDeletedDate(LocalDate.now());
-    playerDao.save(player);
+    playerEntity.setDeleted(true);
+    playerEntity.setDeletedDate(LocalDate.now());
+
+    PerformanceEntity performanceEntity=playerEntity.getPerformance();
+    if (performanceEntity != null) {
+        performanceEntity.setTotalWins(null);
+        performanceEntity.setTotalGamesPlayed(null);
+        performanceEntity.setCumMargin(null);
+        performanceEntity.setAvgMargin(null);
+        performanceEntity.setPlayerRank(null);
+    }
+    playerDao.save(playerEntity);
 }
 
     @Override
