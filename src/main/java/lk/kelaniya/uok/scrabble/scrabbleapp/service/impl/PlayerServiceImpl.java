@@ -61,11 +61,12 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public PlayerDTO getSelectedPlayer(String playerId) {
-        return null;
+        PlayerEntity playerEntity=playerDao.findById(playerId).orElseThrow(()->new PlayerNotFoundException("Player not found"));
+        return entityDTOConvert.convertPlayerEntityToPlayerDTO(playerEntity);
     }
 
     @Override
     public List<PlayerDTO> getAllPlayers() {
-        return List.of();
+        return entityDTOConvert.convertPlayerEntityListToPlayerDTOList(playerDao.findAll());
     }
 }
