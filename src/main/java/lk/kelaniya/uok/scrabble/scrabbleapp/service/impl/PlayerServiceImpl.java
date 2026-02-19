@@ -84,7 +84,8 @@ public void deletePlayer(String playerId) {
 
     @Override
     public void updatePlayer(String playerId, PlayerDTO playerDTO) {
-        PlayerEntity playerEntity = playerDao.findById(playerId).orElseThrow(()->new PlayerNotFoundException("Player not Found"));
+        PlayerEntity playerEntity = playerDao.findById(playerId)
+                .orElseThrow(()->new PlayerNotFoundException("Player not Found"));
         playerEntity.setFirstName(playerDTO.getFirstName());
         playerEntity.setLastName(playerDTO.getLastName());
         playerEntity.setAge(UtilData.calcAge(playerDTO.getDob()));

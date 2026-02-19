@@ -78,40 +78,7 @@ public class GameServiceImpl implements GameService {
 
 
 
-
-        if (!gameDTO.isGameTied()){
-//            PerformanceEntity winner=performanceDao.findById(gameDTO.getWinnerId())
-//                    .orElseThrow(()->new PlayerNotFoundException("Player not found"));
-            if(gameDTO.getWinnerId().equals(player1.getPlayerId())){
-                performanceCalc.updatePerformanceAfterGame(player1Perf,gameDTO);
-                player2Perf.setTotalGamesPlayed(player2Perf.getTotalGamesPlayed()+1);
-
-            }else{
-                performanceCalc.updatePerformanceAfterGame(player2Perf,gameDTO);
-                player1Perf.setTotalGamesPlayed(player1Perf.getTotalGamesPlayed()+1);
-            }
-        }else{
-
-            performanceCalc.updatePerformanceAfterGame(player1Perf,gameDTO);
-            performanceCalc.updatePerformanceAfterGame(player2Perf,gameDTO);
-        }
-        int cumMargin1= player1Perf.getCumMargin();
-        int newCumMargin1=cumMargin1+(gameDTO.getScore1()-gameDTO.getScore2());
-        player1Perf.setCumMargin(newCumMargin1);
-
-        int cumMargin2= player2Perf.getCumMargin();
-        int newCumMargin2=cumMargin2+(gameDTO.getScore2()-gameDTO.getScore1());
-        player2Perf.setCumMargin(newCumMargin2);
-
-        double avgMargin1 = (double) player1Perf.getCumMargin() / player1Perf.getTotalGamesPlayed();
-        avgMargin1 = Math.round(avgMargin1 * 100.0) / 100.0;  // round to 2 decimal places
-        player1Perf.setAvgMargin(avgMargin1);
-
-        double avgMargin2 = (double) player2Perf.getCumMargin() / player2Perf.getTotalGamesPlayed();
-        avgMargin2 = Math.round(avgMargin2 * 100.0) / 100.0;  // round to 2 decimal places
-        player2Perf.setAvgMargin(avgMargin2);
-
-
+        performanceCalc.updateBothPlayersPerformance(player1Perf,player2Perf,gameDTO);
         performanceCalc.updateRanks();
     }
 
@@ -119,10 +86,35 @@ public class GameServiceImpl implements GameService {
     public void deleteGame(String gameId) {
         GameEntity gameEntity=gameDao.findById(gameId).orElseThrow(()-> new GameNotFoundException("Game not found"));
         gameDao.delete(gameEntity);
+        performanceCalc.reCalculateAllPerformances();
     }
 
     @Override
     public void updateGame(String gameId, GameDTO gameDTO) {
+        GameEntity gameEntity=gameDao.findById(gameId).orElseThrow(()->new GameNotFoundException("Game not found"));
+        PlayerEntity player1=playerDao.findById(gameDTO.getPlayer1Id())
+                        .orElseThrow(()->new PlayerNotFoundException("Player1 Not Found"));
+        PlayerEntity player2=playerDao.findById(gameDTO.getPlayer2Id())
+                        .orElseThrow(()->new PlayerNotFoundException("Player2 Not Found"));
+        gameEntity.setPlayer1(player1);
+        gameEntity.setPlayer2(player2);
+        gameEntity.setScore1(gameDTO.getScore1());
+        gameEntity.setScore2(gameDTO.getScore2());
+        gameEntity.setMargin(performanceCalc.calcMargin(gameDTO));
+
+        String winnerId= performanceCalc.calcWinner(gameDTO);
+        if(winnerId.equals(player1.getPlayerId())){
+            gameEntity.setWinner(player1);
+        }else if(winnerId.equals(player2.getPlayerId())){
+            gameEntity.setWinner(player2);
+        }else{
+            gameEntity.setWinner(null);//tied game has no winner
+        }
+        gameEntity.setGameDate(gameDTO.getGameDate());
+        gameDao.save(gameEntity);
+
+
+        performanceCalc.reCalculateAllPerformances();
 
     }
 
