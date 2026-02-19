@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "player")
+@SQLRestriction("deleted=false")
 public class PlayerEntity {
     @Id
     private String playerId;
@@ -44,4 +46,9 @@ public class PlayerEntity {
 
     @OneToMany(mappedBy = "winner")
     private List<GameEntity> gamesWon;
+
+    @Column(nullable = false)
+    private boolean deleted = false;
+
+    private LocalDate deletedDate; // optional, for auditing
 }

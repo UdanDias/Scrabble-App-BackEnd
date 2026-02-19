@@ -24,54 +24,54 @@ public class PerformanceController {
         return "Health controller is running";
     }
     @PostMapping(value = "/addperformance",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> addPerformance(@RequestBody PerformanceDTO performanceDTO){
-        if(performanceDTO==null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        try {
-            System.out.println(performanceDTO);
-//            performanceService.addPerformance(performanceDTO);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        }catch (PerformanceNotFoundException e){
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-    }
-    @DeleteMapping("/deletePerformance")
-    public ResponseEntity<Void> deletePerformance(@RequestParam("performanceId") String performanceId){
-        if(performanceId==null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }try {
-            performanceService.deletePerformance(performanceId);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch (PerformanceNotFoundException e){
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }catch (Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-    @PatchMapping(value = "/updateperformance",consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> updatePerformance(@RequestParam ("performanceId") String performanceId, @RequestBody PerformanceDTO performanceDTO){
-        if(performanceId==null||performanceDTO==null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        try {
-            performanceService.updatePerformance(performanceId, performanceDTO);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch (PerformanceNotFoundException e){
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }catch (Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    public ResponseEntity<Void> addPerformance(@RequestBody PerformanceDTO performanceDTO){
+//        if(performanceDTO==null){
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//        try {
+//            System.out.println(performanceDTO);
+////            performanceService.addPerformance(performanceDTO);
+//            return new ResponseEntity<>(HttpStatus.CREATED);
+//        }catch (PerformanceNotFoundException e){
+//            e.printStackTrace();
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//
+//    }
+//    @DeleteMapping("/deletePerformance")
+//    public ResponseEntity<Void> deletePerformance(@RequestParam("performanceId") String performanceId){
+//        if(performanceId==null){
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }try {
+//            performanceService.deletePerformance(performanceId);
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        }catch (PerformanceNotFoundException e){
+//            e.printStackTrace();
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
+//    @PatchMapping(value = "/updateperformance",consumes = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<Void> updatePerformance(@RequestParam ("performanceId") String performanceId, @RequestBody PerformanceDTO performanceDTO){
+//        if(performanceId==null||performanceDTO==null){
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//        try {
+//            performanceService.updatePerformance(performanceId, performanceDTO);
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        }catch (PerformanceNotFoundException e){
+//            e.printStackTrace();
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
     @GetMapping("/getselectedperformance")
     public ResponseEntity<PerformanceDTO> getSelectedPerformance(@RequestParam ("performanceId")String performanceId){
         if(performanceId==null){

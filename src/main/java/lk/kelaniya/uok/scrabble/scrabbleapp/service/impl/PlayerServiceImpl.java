@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -64,31 +65,12 @@ public class PlayerServiceImpl implements PlayerService {
 //    }
 @Override
 public void deletePlayer(String playerId) {
-    playerDao.findById(playerId)
+    PlayerEntity player = playerDao.findById(playerId)
             .orElseThrow(() -> new PlayerNotFoundException("Player not found"));
 
-    // Nullify winner reference in games where this player won
-    List<GameEntity> wonGames = gameDao.findByWinner_PlayerId(playerId);
-    for (GameEntity game : wonGames) {
-        game.setWinner(null);
-        gameDao.save(game);
-    }
-
-    // Nullify player1 reference in games
-    List<GameEntity> player1Games = gameDao.findByPlayer1_PlayerId(playerId);
-    for (GameEntity game : player1Games) {
-        game.setPlayer1(null);
-        gameDao.save(game);
-    }
-
-    // Nullify player2 reference in games
-    List<GameEntity> player2Games = gameDao.findByPlayer2_PlayerId(playerId);
-    for (GameEntity game : player2Games) {
-        game.setPlayer2(null);
-        gameDao.save(game);
-    }
-
-    playerDao.deleteById(playerId);
+    player.setDeleted(true);
+    player.setDeletedDate(LocalDate.now());
+    playerDao.save(player);
 }
 
     @Override
