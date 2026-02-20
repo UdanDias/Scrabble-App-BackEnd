@@ -94,7 +94,7 @@ public class GameServiceImpl implements GameService {
         }else if(winnerId.equals(player2.getPlayerId())){
             gameEntity.setWinner(player2);
         }else{
-            gameEntity.setWinner(null);//tied game has no winner
+            gameEntity.setWinner(null);
         }
         gameEntity.setGameDate(gameDTO.getGameDate());
         gameDao.save(gameEntity);

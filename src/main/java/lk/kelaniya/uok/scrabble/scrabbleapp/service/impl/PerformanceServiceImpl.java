@@ -1,9 +1,13 @@
 package lk.kelaniya.uok.scrabble.scrabbleapp.service.impl;
 
 import jakarta.transaction.Transactional;
+import lk.kelaniya.uok.scrabble.scrabbleapp.dao.PerformanceDao;
 import lk.kelaniya.uok.scrabble.scrabbleapp.dto.PerformanceDTO;
 import lk.kelaniya.uok.scrabble.scrabbleapp.dto.PlayerDTO;
+import lk.kelaniya.uok.scrabble.scrabbleapp.entity.PerformanceEntity;
+import lk.kelaniya.uok.scrabble.scrabbleapp.exception.PerformanceNotFoundException;
 import lk.kelaniya.uok.scrabble.scrabbleapp.service.PerformanceService;
+import lk.kelaniya.uok.scrabble.scrabbleapp.util.EntityDTOConvert;
 import lk.kelaniya.uok.scrabble.scrabbleapp.util.UtilData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,28 +17,18 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 public class PerformanceServiceImpl implements PerformanceService {
-//    @Override
-//    public void addPerformance(PerformanceDTO performanceDTO) {
-//        performanceDTO.setPerformanceId(UtilData.generatePerformanceId());
-//    }
-
-    @Override
-    public void deletePerformance(String performanceId) {
-
-    }
-
-    @Override
-    public void updatePerformance(String performanceId, PerformanceDTO performanceDTO) {
-
-    }
+    private final PerformanceDao performanceDao;
+    private final EntityDTOConvert entityDTOConvert;
 
     @Override
     public PerformanceDTO getSelectedPerformance(String performanceId) {
-        return null;
+        PerformanceEntity performance=performanceDao.findById(performanceId)
+                .orElseThrow(()->new PerformanceNotFoundException("performance not found"));
+        return entityDTOConvert.convertPerformanceEntityToPerformanceDTO(performance);
     }
 
     @Override
     public List<PerformanceDTO> getAllPerformances() {
-        return List.of();
+        return entityDTOConvert.convertPerformanceEntityListToPerformanceDTOList(performanceDao.findAll());
     }
 }
