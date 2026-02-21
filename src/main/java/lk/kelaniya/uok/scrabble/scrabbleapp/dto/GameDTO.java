@@ -1,5 +1,6 @@
 package lk.kelaniya.uok.scrabble.scrabbleapp.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ public class GameDTO implements Serializable {
     private boolean gameTied =false;
     private int margin ;
     private String winnerId;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate gameDate;
     private boolean bye = false;
 
