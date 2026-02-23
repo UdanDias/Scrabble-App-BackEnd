@@ -34,4 +34,5 @@ public class GameEntity {
 
     private LocalDate gameDate;
     private boolean bye = false;
+    private boolean gameTied=false;
 }

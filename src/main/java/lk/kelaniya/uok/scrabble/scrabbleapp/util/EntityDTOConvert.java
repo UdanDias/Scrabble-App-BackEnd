@@ -33,7 +33,8 @@ public class EntityDTOConvert {
     public GameDTO convertGameEntityToGameDTO(GameEntity gameEntity) {
         GameDTO gameDTO = modelMapper.map(gameEntity, GameDTO.class);
         // gameTied is not stored in DB so we derive it from scores
-        gameDTO.setGameTied(gameEntity.getScore1() == gameEntity.getScore2());
+//        gameDTO.setGameTied(gameEntity.getScore1() == gameEntity.getScore2());
+        gameDTO.setGameTied(gameEntity.isGameTied());
         // ensure winnerId is null for tied games not empty string
         if (gameDTO.isGameTied()) {
             gameDTO.setWinnerId(null);

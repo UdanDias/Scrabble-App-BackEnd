@@ -81,6 +81,7 @@ public class GameServiceImpl implements GameService {
         gameEntity.setWinner(player);
         gameEntity.setGameDate(gameDate);
         gameEntity.setBye(true);
+        gameEntity.setGameTied(false);
 
         gameDao.save(gameEntity);
         performanceCalc.reCalculateAllPerformances();

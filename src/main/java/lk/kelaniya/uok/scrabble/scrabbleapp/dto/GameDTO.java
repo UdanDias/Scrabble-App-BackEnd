@@ -24,4 +24,5 @@ public class GameDTO implements Serializable {
     private LocalDate gameDate;
     private boolean bye = false;
 
+
 }
