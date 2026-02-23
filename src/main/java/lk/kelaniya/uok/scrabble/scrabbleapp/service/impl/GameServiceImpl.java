@@ -6,6 +6,7 @@ import lk.kelaniya.uok.scrabble.scrabbleapp.dao.PerformanceDao;
 import lk.kelaniya.uok.scrabble.scrabbleapp.dao.PlayerDao;
 import lk.kelaniya.uok.scrabble.scrabbleapp.dto.GameDTO;
 import lk.kelaniya.uok.scrabble.scrabbleapp.dto.PerformanceDTO;
+import lk.kelaniya.uok.scrabble.scrabbleapp.dto.PlayerGameDTO;
 import lk.kelaniya.uok.scrabble.scrabbleapp.entity.GameEntity;
 import lk.kelaniya.uok.scrabble.scrabbleapp.entity.PerformanceEntity;
 import lk.kelaniya.uok.scrabble.scrabbleapp.entity.PlayerEntity;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -132,11 +134,15 @@ public class GameServiceImpl implements GameService {
         return entityDTOConvert.convertGameEntityListToGameDTOList(gameDao.findAll());
     }
     @Override
-    public List<GameDTO> getAllGamesByPlayerId(String playerId) {
+    public List<PlayerGameDTO> getAllGamesByPlayerId(String playerId) {
         playerDao.findById(playerId)
                 .orElseThrow(() -> new PlayerNotFoundException("Player not found"));
 
         List<GameEntity> games = gameDao.getAllGamesByPlayerId(playerId);
-        return entityDTOConvert.convertGameEntityListToGameDTOList(games);
+
+        // ✅ Use new conversion method
+        return games.stream()
+                .map(entityDTOConvert::convertGameEntityToPlayerGameDTO)
+                .collect(Collectors.toList());
     }
 }

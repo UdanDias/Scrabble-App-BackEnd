@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Component;
+import lk.kelaniya.uok.scrabble.scrabbleapp.dto.PlayerGameDTO;
 
 import java.util.List;
 
@@ -54,6 +55,45 @@ public class EntityDTOConvert {
     }
     public List<PerformanceDTO> convertPerformanceEntityListToPerformanceDTOList(List<PerformanceEntity> performanceEntityList) {
         return modelMapper.map(performanceEntityList,new TypeToken<List<PerformanceDTO>>(){}.getType());
+    }
+    public PlayerGameDTO convertGameEntityToPlayerGameDTO(GameEntity gameEntity) {
+        PlayerGameDTO dto = new PlayerGameDTO();
+
+        // Basic fields
+        dto.setGameId(gameEntity.getGameId());
+        dto.setScore1(gameEntity.getScore1());
+        dto.setScore2(gameEntity.getScore2());
+        dto.setMargin(gameEntity.getMargin());
+        dto.setGameTied(gameEntity.isGameTied());
+        dto.setGameDate(gameEntity.getGameDate());
+        dto.setBye(gameEntity.isBye());
+
+        // Player 1
+        if (gameEntity.getPlayer1() != null) {
+            dto.setPlayer1Id(gameEntity.getPlayer1().getPlayerId());
+            dto.setPlayer1Name(gameEntity.getPlayer1().getFirstName()
+                    + " " + gameEntity.getPlayer1().getLastName());
+        }
+
+        // Player 2
+        if (gameEntity.getPlayer2() != null) {
+            dto.setPlayer2Id(gameEntity.getPlayer2().getPlayerId());
+            dto.setPlayer2Name(gameEntity.getPlayer2().getFirstName()
+                    + " " + gameEntity.getPlayer2().getLastName());
+        } else {
+            dto.setPlayer2Name("BYE");
+        }
+
+        // Winner
+        if (gameEntity.getWinner() != null) {
+            dto.setWinnerId(gameEntity.getWinner().getPlayerId());
+            dto.setWinnerName(gameEntity.getWinner().getFirstName()
+                    + " " + gameEntity.getWinner().getLastName());
+        } else {
+            dto.setWinnerName(gameEntity.isGameTied() ? "Tied" : "");
+        }
+
+        return dto;
     }
 
 }

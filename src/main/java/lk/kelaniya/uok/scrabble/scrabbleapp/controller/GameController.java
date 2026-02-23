@@ -2,6 +2,7 @@ package lk.kelaniya.uok.scrabble.scrabbleapp.controller;
 
 import lk.kelaniya.uok.scrabble.scrabbleapp.dto.ByeGameDTO;
 import lk.kelaniya.uok.scrabble.scrabbleapp.dto.GameDTO;
+import lk.kelaniya.uok.scrabble.scrabbleapp.dto.PlayerGameDTO;
 import lk.kelaniya.uok.scrabble.scrabbleapp.exception.GameNotFoundException;
 import lk.kelaniya.uok.scrabble.scrabbleapp.exception.PlayerNotFoundException;
 import lk.kelaniya.uok.scrabble.scrabbleapp.service.GameService;
@@ -116,7 +117,7 @@ public class GameController {
        }
     }
     @GetMapping("/getplayergames")
-    public ResponseEntity<List<GameDTO>> getAllGamesByPlayerId(@RequestParam("playerId") String playerId) {
+    public ResponseEntity<List<PlayerGameDTO>> getAllGamesByPlayerId(@RequestParam("playerId") String playerId) {
         try {
             return ResponseEntity.ok(gameService.getAllGamesByPlayerId(playerId));
         } catch (PlayerNotFoundException e) {

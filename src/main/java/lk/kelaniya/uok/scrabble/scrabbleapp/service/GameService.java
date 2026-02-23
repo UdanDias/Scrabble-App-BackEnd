@@ -1,6 +1,7 @@
 package lk.kelaniya.uok.scrabble.scrabbleapp.service;
 
 import lk.kelaniya.uok.scrabble.scrabbleapp.dto.GameDTO;
+import lk.kelaniya.uok.scrabble.scrabbleapp.dto.PlayerGameDTO;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,5 +13,5 @@ public interface GameService {
     GameDTO updateGame(String gameId,GameDTO gameDTO);
     GameDTO getSelectedGame(String gameId);
     List<GameDTO> getAllGames();
-    List<GameDTO> getAllGamesByPlayerId(String playerId);
+    List<PlayerGameDTO> getAllGamesByPlayerId(String playerId);
 }
