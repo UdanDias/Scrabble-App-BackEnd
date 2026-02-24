@@ -12,32 +12,32 @@ import java.util.List;
 
 @Configuration
 public class CORSConfig {
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource(){
-//        var corsConfiguration=new CorsConfiguration();
-//        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
-//        corsConfiguration.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
-//        corsConfiguration.setAllowedHeaders(List.of("*")); //check this one
-//        corsConfiguration.setExposedHeaders(List.of( "Content-Type"));
-//        corsConfiguration.setAllowCredentials(true);
-//
-//        var source=new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**",corsConfiguration);
-//        return source;
-//    }
-
-
     @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("*")   //.allowedOrigins("http://localhost:3000")
-                        .allowedMethods("GET", "POST", "PUT","PATCH", "DELETE","OPTIONS")
-                        .allowedHeaders("*");
-            }
-        };
+    public CorsConfigurationSource corsConfigurationSource(){
+        var corsConfiguration=new CorsConfiguration();
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
+        corsConfiguration.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
+        corsConfiguration.setAllowedHeaders(List.of("Authorization","Content-Type")); //check this one
+        corsConfiguration.setExposedHeaders(List.of( "Authorization"));
+        corsConfiguration.setAllowCredentials(true);
+
+        var source=new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**",corsConfiguration);
+        return source;
     }
+
+
+//    @Bean
+//    public WebMvcConfigurer corsConfigurer() {
+//        return new WebMvcConfigurer() {
+//            @Override
+//            public void addCorsMappings(CorsRegistry registry) {
+//                registry.addMapping("/**")
+//                        .allowedOrigins("*")   //.allowedOrigins("http://localhost:3000")
+//                        .allowedMethods("GET", "POST", "PUT","PATCH", "DELETE","OPTIONS")
+//                        .allowedHeaders("*");
+//            }
+//        };
+//    }
 
 }
