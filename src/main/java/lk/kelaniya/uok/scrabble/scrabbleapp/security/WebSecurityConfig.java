@@ -59,9 +59,11 @@ public class WebSecurityConfig {
                 .sessionManagement(session ->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/api/v1/auth/**").permitAll()
-                                .requestMatchers("/api/v1/player/getallplayers").hasRole("ADMIN")
-
-                                .anyRequest().authenticated());
+                                .anyRequest().permitAll()
+//                                .requestMatchers("/api/v1/player/getallplayers").hasRole("ADMIN")
+//
+//                                .anyRequest().authenticated()
+                                );
         http.authenticationProvider(daoAuthenticationProvider());
         http.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
