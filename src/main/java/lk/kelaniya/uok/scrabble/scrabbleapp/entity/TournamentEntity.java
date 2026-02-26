@@ -18,6 +18,7 @@ public class TournamentEntity {
     @Id
     private String tournamentId;
     private String tournamentName;
+    @Enumerated(EnumType.STRING)
     private TournamentStatus status;
 
     @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL, orphanRemoval = true)
