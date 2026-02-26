@@ -2,6 +2,7 @@ package lk.kelaniya.uok.scrabble.scrabbleapp.entity.security;
 
 import jakarta.persistence.*;
 import lk.kelaniya.uok.scrabble.scrabbleapp.dto.Role;
+import lk.kelaniya.uok.scrabble.scrabbleapp.entity.PlayerEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,9 @@ public class UserEntity implements Serializable, UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
+    @OneToOne(optional = false)
+    @JoinColumn(name = "player_id", nullable = false)
+    private PlayerEntity player;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

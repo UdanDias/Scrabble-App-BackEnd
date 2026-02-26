@@ -24,7 +24,7 @@ public class JWTutils {
     }
 
     public String generateToken(String username,
-                                Collection<? extends GrantedAuthority> authorities) {
+                                Collection<? extends GrantedAuthority> authorities,String playerId) {
 
         String roles = authorities
                 .stream()
@@ -34,6 +34,7 @@ public class JWTutils {
         return Jwts.builder()
                 .setSubject(username)
                 .claim("roles", roles)
+                .claim("playerId", playerId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // 24h
                 .signWith(key(), SignatureAlgorithm.HS256)
@@ -57,5 +58,13 @@ public class JWTutils {
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+    }
+    public String getPlayerIdFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("playerId", String.class);
     }
 }
