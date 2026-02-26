@@ -12,6 +12,7 @@ import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -106,13 +107,43 @@ public class EntityDTOConvert {
         dto.setCumMargin(performanceEntity.getCumMargin());
         return dto;
     }
-    public UserDTO convertUserEntityToUserDTO(UserEntity userEntity) {
-        return modelMapper.map(userEntity,UserDTO.class);
-    }
+//    public UserDTO convertUserEntityToUserDTO(UserEntity userEntity) {
+//        return modelMapper.map(userEntity,UserDTO.class);
+//    }
     public UserEntity convertUserDTOToUserEntity(UserDTO userDTO) {
         return modelMapper.map(userDTO,UserEntity.class);
     }
-    public List<UserDTO> convertUserEntityListToUserDTOList(List<UserEntity> userEntityList) {
-        return modelMapper.map(userEntityList, new TypeToken<List<UserDTO>>(){}.getType());
+//    public List<UserDTO> convertUserEntityListToUserDTOList(List<UserEntity> userEntityList) {
+//        return modelMapper.map(userEntityList, new TypeToken<List<UserDTO>>(){}.getType());
+//    }
+    public UserDTO convertUserEntityToUserDTO(UserEntity userEntity) {
+        UserDTO dto = new UserDTO();
+
+        // User fields
+        dto.setEmail(userEntity.getEmail());
+        dto.setRole(userEntity.getRole());
+        // don't map password back for security
+
+        // Player fields from nested player entity
+        PlayerEntity player = userEntity.getPlayer();
+        if (player != null) {
+            dto.setFirstName(player.getFirstName());
+            dto.setLastName(player.getLastName());
+            dto.setAge(player.getAge());
+            dto.setGender(player.getGender());
+            dto.setDob(player.getDob());
+            dto.setPhone(player.getPhone());
+            dto.setAddress(player.getAddress());
+            dto.setFaculty(player.getFaculty());
+            dto.setAcademicLevel(player.getAcademicLevel());
+        }
+
+        return dto;
     }
+    public List<UserDTO> convertUserEntityListToUserDTOList(List<UserEntity> userEntityList) {
+        return userEntityList.stream()
+                .map(this::convertUserEntityToUserDTO)
+                .collect(Collectors.toList());
+    }
+
 }
