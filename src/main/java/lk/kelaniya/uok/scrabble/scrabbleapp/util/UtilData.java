@@ -27,4 +27,12 @@ public class UtilData {
     public static String generateUserId(){
         return "U/-"+UUID.randomUUID().toString();
     }
+
+    public static String generateTournamentId(){
+        return "T/-"+UUID.randomUUID().toString();
+    }
+
+    public static String generateRoundId(){
+        return "R/-"+UUID.randomUUID().toString();
+    }
 }

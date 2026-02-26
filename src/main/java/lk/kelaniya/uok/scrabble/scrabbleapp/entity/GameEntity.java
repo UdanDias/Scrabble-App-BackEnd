@@ -35,4 +35,8 @@ public class GameEntity {
     private LocalDate gameDate;
     private boolean bye = false;
     private boolean gameTied=false;
+
+    @ManyToOne
+    @JoinColumn(name = "round_id", nullable = true)
+    private RoundEntity round;
 }

@@ -4,15 +4,18 @@ import jakarta.transaction.Transactional;
 import lk.kelaniya.uok.scrabble.scrabbleapp.dao.GameDao;
 import lk.kelaniya.uok.scrabble.scrabbleapp.dao.PerformanceDao;
 import lk.kelaniya.uok.scrabble.scrabbleapp.dao.PlayerDao;
+import lk.kelaniya.uok.scrabble.scrabbleapp.dao.RoundDao;
 import lk.kelaniya.uok.scrabble.scrabbleapp.dto.GameDTO;
 import lk.kelaniya.uok.scrabble.scrabbleapp.dto.PerformanceDTO;
 import lk.kelaniya.uok.scrabble.scrabbleapp.dto.PlayerGameDTO;
 import lk.kelaniya.uok.scrabble.scrabbleapp.entity.GameEntity;
 import lk.kelaniya.uok.scrabble.scrabbleapp.entity.PerformanceEntity;
 import lk.kelaniya.uok.scrabble.scrabbleapp.entity.PlayerEntity;
+import lk.kelaniya.uok.scrabble.scrabbleapp.entity.RoundEntity;
 import lk.kelaniya.uok.scrabble.scrabbleapp.exception.GameNotFoundException;
 import lk.kelaniya.uok.scrabble.scrabbleapp.exception.InputMarginIncorrectException;
 import lk.kelaniya.uok.scrabble.scrabbleapp.exception.PlayerNotFoundException;
+import lk.kelaniya.uok.scrabble.scrabbleapp.exception.RoundNotFoundException;
 import lk.kelaniya.uok.scrabble.scrabbleapp.service.GameService;
 import lk.kelaniya.uok.scrabble.scrabbleapp.util.EntityDTOConvert;
 import lk.kelaniya.uok.scrabble.scrabbleapp.util.PerformanceCalc;
@@ -36,6 +39,7 @@ public class GameServiceImpl implements GameService {
     private final GameDao gameDao;
     private final EntityDTOConvert entityDTOConvert;
     private final PlayerDao playerDao;
+    private final RoundDao roundDao;
 
     @Override
     public void addGame(GameDTO gameDTO)  {
@@ -64,12 +68,18 @@ public class GameServiceImpl implements GameService {
                     .orElseThrow(() -> new PlayerNotFoundException("Winner not found"));
             gameEntity.setWinner(winner);
         }
+        // inside addGame, before gameDao.save(gameEntity):
+        if (gameDTO.getRoundId() != null && !gameDTO.getRoundId().isEmpty()) {
+            RoundEntity round = roundDao.findById(gameDTO.getRoundId())
+                    .orElseThrow(() -> new RoundNotFoundException("Round not found"));
+            gameEntity.setRound(round);
+        }
         gameDao.save(gameEntity);
         performanceCalc.reCalculateAllPerformances();
     }
 
     @Override
-    public void addByeGame(String playerId, LocalDate gameDate) {
+    public void addByeGame(String playerId, LocalDate gameDate, String roundId) {
         PlayerEntity player = playerDao.findById(playerId)
                 .orElseThrow(() -> new PlayerNotFoundException("Player not found"));
 
@@ -84,6 +94,13 @@ public class GameServiceImpl implements GameService {
         gameEntity.setGameDate(gameDate);
         gameEntity.setBye(true);
         gameEntity.setGameTied(false);
+
+        // ← add round link
+        if (roundId != null && !roundId.isEmpty()) {
+            RoundEntity round = roundDao.findById(roundId)
+                    .orElseThrow(() -> new RoundNotFoundException("Round not found"));
+            gameEntity.setRound(round);
+        }
 
         gameDao.save(gameEntity);
         performanceCalc.reCalculateAllPerformances();
@@ -118,6 +135,15 @@ public class GameServiceImpl implements GameService {
             gameEntity.setWinner(null);
         }
         gameEntity.setGameDate(gameDTO.getGameDate());
+
+        // add this before gameDao.save(gameEntity) in updateGame
+        if (gameDTO.getRoundId() != null && !gameDTO.getRoundId().isEmpty()) {
+            RoundEntity round = roundDao.findById(gameDTO.getRoundId())
+                    .orElseThrow(() -> new RoundNotFoundException("Round not found"));
+            gameEntity.setRound(round);
+        } else {
+            gameEntity.setRound(null); // allow removing a game from a round
+        }
         GameEntity updatedGame = gameDao.save(gameEntity);
         performanceCalc.reCalculateAllPerformances();
         return entityDTOConvert.convertGameEntityToGameDTO(updatedGame);

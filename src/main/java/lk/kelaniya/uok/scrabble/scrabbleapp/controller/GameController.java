@@ -46,7 +46,7 @@ public class GameController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         try {
-            gameService.addByeGame(byeGameDTO.getPlayerId(), byeGameDTO.getGameDate());
+            gameService.addByeGame(byeGameDTO.getPlayerId(), byeGameDTO.getGameDate(),byeGameDTO.getRoundId());
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (PlayerNotFoundException e) {
             e.printStackTrace();

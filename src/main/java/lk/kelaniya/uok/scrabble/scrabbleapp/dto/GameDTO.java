@@ -23,6 +23,7 @@ public class GameDTO implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate gameDate;
     private boolean bye = false;
+    private String roundId;
 
 
 }

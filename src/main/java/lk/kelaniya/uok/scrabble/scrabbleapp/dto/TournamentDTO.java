@@ -9,12 +9,10 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 @AllArgsConstructor
-@Data
 @NoArgsConstructor
-public class ByeGameDTO implements Serializable {
-    private String playerId;
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate gameDate;
-    private String roundId;
-
+@Data
+public class TournamentDTO implements Serializable {
+    private String tournamentId;
+    private String tournamentName;
+    private TournamentStatus status;
 }
