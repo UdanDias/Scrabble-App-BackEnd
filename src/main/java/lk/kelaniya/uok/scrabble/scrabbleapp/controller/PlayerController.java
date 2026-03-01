@@ -40,6 +40,23 @@ public class PlayerController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);        }
 
     }
+
+    @PostMapping(value = "/addplayers/bulk",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> addPlayers(@RequestBody List<PlayerDTO> playerDTOs) {
+        if (playerDTOs == null || playerDTOs.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        try {
+            playerDTOs.forEach(playerService::addPlayer);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @DeleteMapping("/deleteplayer")
     public ResponseEntity<Void> deletePlayer(@RequestParam("playerId") String playerId){
         if(playerId==null){
