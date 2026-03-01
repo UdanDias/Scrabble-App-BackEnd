@@ -8,6 +8,7 @@ import lk.kelaniya.uok.scrabble.scrabbleapp.exception.PlayerNotFoundException;
 import lk.kelaniya.uok.scrabble.scrabbleapp.service.GameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,6 +57,8 @@ public class GameController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
 
     @DeleteMapping("/deletegame")
     public ResponseEntity<Void> deleteGame(@RequestParam("gameId") String gameId){
