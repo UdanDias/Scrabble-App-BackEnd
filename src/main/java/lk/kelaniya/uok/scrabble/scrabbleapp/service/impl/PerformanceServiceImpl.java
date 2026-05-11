@@ -69,7 +69,13 @@ public class PerformanceServiceImpl implements PerformanceService {
                         g.getRound().getTournament().getTournamentName()));
 
         if (!isMiniTournament) {
-            return replayNonMiniTournament(tournamentGames);
+            List<TournamentPlayerEntity> registrations =
+                    tournamentPlayerDao.findByTournamentId(tournamentId);
+            Set<String> activePlayerIds = registrations.stream()
+                    .filter(tp -> tp.getActivityStatus() != PlayerActivityStatus.INACTIVE)
+                    .map(TournamentPlayerEntity::getPlayerId)
+                    .collect(Collectors.toSet());
+            return replayNonMiniTournament(tournamentGames, activePlayerIds);
         }
 
         List<TournamentPlayerEntity> registrations =
@@ -181,7 +187,8 @@ public class PerformanceServiceImpl implements PerformanceService {
 
     // ── Non-mini replay ───────────────────────────────────────────────────────
 
-    private List<RankedPlayerDTO> replayNonMiniTournament(List<GameEntity> games) {
+    private List<RankedPlayerDTO> replayNonMiniTournament(List<GameEntity> games,
+                                                          Set<String> activePlayerIds) {
         Map<String, TournamentPlayerStats> statsMap = new HashMap<>();
         games.stream()
                 .sorted(Comparator.comparing(g -> g.getGameDate() != null
@@ -191,22 +198,31 @@ public class PerformanceServiceImpl implements PerformanceService {
         List<TournamentPlayerStats> statsList = new ArrayList<>(statsMap.values());
         statsList.forEach(s -> s.avgMargin = s.gamesPlayed > 0
                 ? Math.round((double) s.cumMargin / s.gamesPlayed * 100.0) / 100.0 : 0.0);
-        statsList.sort((a, b) -> {
+
+        // ✅ Filter to active players BEFORE sorting and ranking
+        List<TournamentPlayerStats> activeStatsList = statsList.stream()
+                .filter(s -> activePlayerIds.isEmpty() || activePlayerIds.contains(s.playerId))
+                .collect(Collectors.toList());
+
+        // ✅ Sort the filtered list (was previously on statsList)
+        activeStatsList.sort((a, b) -> {
             int cmp = Double.compare(b.wins, a.wins);
             return cmp != 0 ? cmp : Double.compare(b.avgMargin, a.avgMargin);
         });
 
+        // ✅ Assign ranks on the filtered list (was previously on statsList)
         int rank = 1;
-        for (int i = 0; i < statsList.size(); i++) {
+        for (int i = 0; i < activeStatsList.size(); i++) {
             if (i > 0) {
-                if (Double.compare(statsList.get(i).wins, statsList.get(i - 1).wins) != 0
-                        || Double.compare(statsList.get(i).avgMargin, statsList.get(i - 1).avgMargin) != 0)
+                if (Double.compare(activeStatsList.get(i).wins, activeStatsList.get(i - 1).wins) != 0
+                        || Double.compare(activeStatsList.get(i).avgMargin, activeStatsList.get(i - 1).avgMargin) != 0)
                     rank = i + 1;
             }
-            statsList.get(i).rank = rank;
+            activeStatsList.get(i).rank = rank;
         }
 
-        return statsList.stream().map(s -> {
+        // ✅ Stream from activeStatsList (was previously statsList)
+        return activeStatsList.stream().map(s -> {
             RankedPlayerDTO dto = new RankedPlayerDTO();
             dto.setPlayerId(s.playerId);
             dto.setFirstName(s.firstName);
@@ -305,6 +321,12 @@ public class PerformanceServiceImpl implements PerformanceService {
     public List<PairingDTO> getSwissPairings(String tournamentId) {
         List<RankedPlayerDTO> rankedPlayers = getPlayersOrderedByRankByTournament(tournamentId);
         if (rankedPlayers.isEmpty()) return List.of();
+
+        // ✅ Already filtered by getPlayersOrderedByRankByTournament,
+        // but defensively ensure no nulls slip through
+        rankedPlayers = rankedPlayers.stream()
+                .filter(p -> p.getPlayerId() != null)
+                .collect(Collectors.toList());
 
         boolean isMiniTournament = rankedPlayers.stream()
                 .anyMatch(p -> p.getEloRating() != null);

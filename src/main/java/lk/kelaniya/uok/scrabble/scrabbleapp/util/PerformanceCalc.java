@@ -289,8 +289,18 @@ public class PerformanceCalc {
                 .stream().map(TournamentPlayerEntity::getPlayerId).collect(Collectors.toSet())
                 : Collections.emptySet();
 
+        // ✅ Build inactive set so they are excluded from ranking
+        Set<String> inactivePlayerIds = miniTournamentId != null
+                ? tournamentPlayerDao.findByTournamentId(miniTournamentId)
+                .stream()
+                .filter(tp -> tp.getActivityStatus() == PlayerActivityStatus.INACTIVE)
+                .map(TournamentPlayerEntity::getPlayerId)
+                .collect(Collectors.toSet())
+                : Collections.emptySet();
+
         List<PerformanceEntity> miniWithGames = performances.stream()
                 .filter(p -> miniPlayerIds.contains(p.getPlayerId()))
+                .filter(p -> !inactivePlayerIds.contains(p.getPlayerId()))  // ✅ exclude inactive
                 .filter(p -> p.getTotalGamesPlayed() != null && p.getTotalGamesPlayed() > 0)
                 .collect(Collectors.toList());
 
